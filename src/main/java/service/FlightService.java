@@ -1,0 +1,55 @@
+package service;
+
+import model.Flights;
+import model.Runway;
+import model.Terminal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import repository.FlightRepo;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class FlightService {
+    @Autowired
+    private FlightRepo flightRepo;
+    public List<Flights> getAllFlights(){
+        return flightRepo.findAll();
+    }
+    public Flights getFlightById(Long id){
+        Optional<Flights> optionalFlights = flightRepo.findById(id);
+        return optionalFlights.orElse(new Flights());
+    }
+    public List<Flights> getFlightsByRunway(Runway runway){
+        return flightRepo.findByRunway(runway);
+    }
+    public List<Flights> getFlightsByTerminals(Terminal terminal){
+        return flightRepo.findByTerminal(terminal);
+    }
+    public Flights createNewFlight(Flights flights){
+        return flightRepo.save(flights);
+    }
+    public Flights updateFlight(Long id,Flights updatedFlight){
+        Optional<Flights> optionalFlights1 = flightRepo.findById(id);
+        if(optionalFlights1.isPresent()){
+            Flights exisitingFlights = optionalFlights1.get();
+            exisitingFlights.setFlight_name(updatedFlight.getFlight_name());
+            exisitingFlights.setFlight_id(updatedFlight.getFlight_id());
+            exisitingFlights.setDomestic(updatedFlight.isDomestic());
+            exisitingFlights.setStatus(updatedFlight.isStatus());
+            exisitingFlights.setCapacity(updatedFlight.getCapacity());
+            exisitingFlights.setArrivedAirport(updatedFlight.getArrivedAirport());
+            exisitingFlights.setDepartureAirport(updatedFlight.getDepartureAirport());
+            exisitingFlights.setArrivalTime(updatedFlight.getArrivalTime());
+            exisitingFlights.setDepartureTime(updatedFlight.getDepartureTime());
+            exisitingFlights.setTicketPrice(updatedFlight.getTicketPrice());
+            return flightRepo.save(exisitingFlights);
+        }
+        return null;
+    }
+    public void deleteFlight(Long id){
+        flightRepo.deleteById(id);
+    }
+
+}
