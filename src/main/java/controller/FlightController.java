@@ -2,6 +2,8 @@ package controller;
 
 import model.Flights;
 import model.Runway;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.FlightService;
 
@@ -12,8 +14,9 @@ import java.util.List;
 public class FlightController {
     private FlightService flightService;
     @GetMapping("/allFlights")
-    public List<Flights> getAllFlights() {
-        return flightService.getAllFlights();
+    public ResponseEntity<List<Flights>> getAllFlights() {
+        List<Flights>flights = (List<Flights>) flightService.getAllFlights();
+        return new ResponseEntity<>(flights, HttpStatus.OK);
     }
     @GetMapping("/FlightId/{id}")
     public Flights getFlightById(@PathVariable Long id){

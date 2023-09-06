@@ -4,18 +4,23 @@ import model.Flights;
 import model.Runway;
 import model.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import repository.FlightRepo;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class FlightService {
     @Autowired
     private FlightRepo flightRepo;
-    public List<Flights> getAllFlights(){
-        return flightRepo.findAll();
+    public ResponseEntity<List<Flights>> getAllFlights(){
+        List<Flights> flights = flightRepo.findAll();
+        return new ResponseEntity<>(flights, HttpStatus.OK);
     }
     public Flights getFlightById(Long id){
         Optional<Flights> optionalFlights = flightRepo.findById(id);
